@@ -1,0 +1,103 @@
+# WM independent keybindings
+
+# reloading sxhkd configuration
+super + Escape
+	pkill -USR1 -x sxhkd
+
+#####################
+# BSPWM keybindings #
+#####################
+
+# quit / restart BSPWM
+super + shift + {q,r}
+	bspc {quit,wm -r}
+
+# close and kill
+super + shift + c
+	bspc node -c
+
+### change window flags ##
+super + {t,shift + t,s,f}
+	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+
+## change node flags ##
+super + ctrl + {m,x,y,z}
+	bspc node -g {marked,locked,sticky,private}
+
+### focus / swap keybindings ##
+
+# focus the node in a give direction
+super + {_, shift + }{h,j,k,l}
+	bspc node -{f,s} {west,south,north,east}
+
+#super + {_,shift + }{1-9,0}
+#	bspc {desktop -f,node -d} focused:'^{1-9,10}'
+
+# focus / send to a given desktop
+super + {_,shift +} {ampersand,eacute,quotedbl,apostrophe,parenleft,minus,egrave,underscore,ccedilla,agrave}
+	bspc {desktop -f,node -d} focused:'^{1-9,10}'
+
+# focus the last node/desktop
+super + {grave,Tab}
+	bspc {node,desktop} -f last
+
+### move / resize keybindings ##
+
+# expand a window
+ctrl + alt + {h,j,k,l}
+	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+
+# shrink a window
+ctrl + alt + shift + {h,j,k,l}
+	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+# moving a floating window
+super + {Left,Down,Up,Right}
+	bspc node -v {-20 0,0 20,0 -20,20 0}
+
+#############################
+## Applications keybindings #
+#############################
+
+# open a terminal
+super + Return
+	alacritty
+
+# Increment/decrement screen brightness
+XF86MonBrightness{Down,Up}
+	xbacklight -{dec,inc} 10
+
+# Increment/decrement audio volume
+XF86Audio{Lower,Raise}Volume
+	amixer set Master 10%{-,+}
+
+# Mute/unmute audio
+XF86AudioMute
+	amixer -D pulse set Master 1+ toggle
+
+XF86Audio{Play,Next,Prev,Stop}
+	playerctl {play-pause,next,previous,stop}
+
+# open rofi
+super + shift + Return
+	rofi -show run -matching fuzzy -font "Fira Code Nerd Font 13"
+
+# lock the screen
+super + control + l
+	~/scripts/lock
+
+super + control + k
+	~/scripts/dmenu_man
+
+super + control + e
+	~/scripts/dotfiles-edit
+
+# toggle polybar
+super + b
+	polybar-msg cmd toggle
+
+super + F1
+	chromium
+
+super + F2
+	pcmanfm

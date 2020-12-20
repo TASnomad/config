@@ -1,0 +1,31 @@
+#!/bin/sh
+
+declare options=("alacritty
+bash
+bspwm
+nvim
+zsh
+vim
+quit")
+
+choice=$(echo -e "${options[@]}" | rofi -dmenu -c -F -i -l 20 -nb '#191919' -nf '#fea63c' -sb '#fea63c' -sf '#191919' -fn 'Fira Code Nerd Font:bold:size=14' -p 'Edit configuration:')
+
+case "$choice" in
+	alacritty) choice="$HOME/.config/alacritty/alacritty.yml";;
+	bspwm) choice="$HOME/.config/bspwm/bspwmrc";;
+	bash) choice="$HOME/.bashrc";;
+	doom) choice="$HOME/.doom.d";;
+	nvim) choice="$HOME/.config/nvim/init.vim";;
+	quit) exit 1;;
+	vim) choice="$HOME/.vimrc";;
+	zsh)
+		if [ -f "$HOME/.zshrc-personal" ]; then
+			choice="$HOME/.zshrc-personal"
+		else
+			choice="$HOME/.zshrc"
+		fi
+	;;
+	*) exit 0;;
+esac
+
+alacritty -e $EDITOR $choice

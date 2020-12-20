@@ -1,0 +1,9 @@
+#!/bin/sh
+
+term="st"
+manual="$(man -k . | rofi -matching fuzzy -dmenu -p 'Manual:' -font "Fira Code Nerd Font 13" | awk '{print $1}')"
+
+if [[ ! -z "$manual" ]]; then
+	$term -t "$manual manual" -e man $manual
+fi
+exit
