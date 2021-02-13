@@ -50,5 +50,5 @@ xorg-apps
 # Configure bspwm
 - `cd config/bspwm`
 - `mkdir -p ~/.config/bspwm`
-- `cp bspwm ~/.config/bspwm`
+- `cp bspwmrc ~/.config/bspwm`
 - `cp sxhkdrc ~/.config/bspwm`
