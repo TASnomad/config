@@ -26,12 +26,62 @@ format-background = #00FF00
 
 [colors]
 ; Ocean dark theme
-background = #2b303b
-foreground = #c0c5c9
+background = #2E3440
+foreground = #ECEFF4
 alert = #bd2c40
 volume-min = #a3be8c
 volume-med = #ebcb8b
 volume-max = #bf616a
+
+[bar/mainbar-i3]
+monitor = eDP1
+monitor-fallback = eDP1
+width = 100%
+height = 20
+radius = 0.0
+fixed-center = true
+bottom = false
+separator =
+
+background = #2E3440
+foreground = #ECEFF4
+
+line-size = 2
+line-color = #F00
+
+wm-restack = i3
+override-redirect = true
+
+enable-ipc = true
+
+border-size = 0
+border-color = #2E3440
+
+padding-left = 1
+padding-right = 1
+
+module-margin-left = 0
+module-margin-right = 0
+
+font-0 = "Fira Code Nerd Font:size=10;2"
+font-1 = "Fira Code Nerd Font:size=16;3"
+font-2 = "Font Awesome 5 Free:style=Regular;pixelsize=8;1"
+font-3 = "Font Awesome 5 Free:style=Bold;pixelsize=8;1"
+font-4 = "Font Awesome 5 Brands:pixelsize=8;1"
+
+modules-left = i3 xwindow
+modules-right = networkspeedup networkspeeddown battery memory2 cpu2 backlight-acpi date
+
+tray-detached = false
+tray-offset-x = 0
+tray-offset-y = 0
+tray-position = right
+tray-padding = 2
+tray-maxisze = 20
+tray-background = #2E3440
+
+scroll-up = i3-wsnext
+scroll-down = i3-wsprev
 
 [bar/mainbar-bspwm]
 monitor = eDP1
@@ -109,6 +159,47 @@ content = "%{T2} %{T-}"
 content-font = 2
 content-foreground = #b48ead
 content-background = #8fa1b3
+
+[module/i3]
+type = internal/i3
+
+pin-workspaces = true
+strip-wsnumbers = true
+index-sort = true
+enable-click = true
+enable-scroll = true
+wrapping-scroll = true
+fuzzy-match = true
+format = <label-state> <label-mode>
+
+label-mode = %mode%
+label-mode-padding = 2
+label-mode-background = #BF616A
+
+label-focused = %index%
+label-focused-foreground = #ECEFF4
+label-focused-background = #4C566A
+label-focused-underline = #EBCB8B
+label-focused-padding = 4
+
+label-unfocused = %index%
+label-unfocused-padding = 4
+label-unfocused-foreground = #4C566A
+label-unfocused-background = #2E3440
+
+label-visible = %index%
+label-visible-underline = #4C566A
+label-visible-padding = 4
+
+label-urgent = %index%
+label-urgent-foreground = #2E3440
+label-urgent-background = #BF616A
+label-urgent-padding = 4
+
+label-separator =
+label-separator-padding = 2
+label-separator-foreground = #EBCB8B
+
 
 [module/bspwm]
 type = internal/bspwm
