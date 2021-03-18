@@ -33,7 +33,7 @@ exec --no-startup-id numlockx on
 exec --no-startup-id blueman-tray
 exec --no-startup-id volumeicon
 exec --no-startup-id nitrogen --restore
-exec --no-startup-id picom --config ~/dotfiles/picom.conf
+exec --no-startup-id picom --config ~/config/picom.conf
 exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id dunst -c ~/.config/dunst/dunstrc
 #exec --no-startup-id ~/config/polybar/i3-launch.sh
