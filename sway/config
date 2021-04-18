@@ -33,6 +33,9 @@ default_border pixel 2
 titlebar_border_thickness 2
 focus_follows_mouse yes
 
+# Inhibit Idle if a window is fullscreen for_window [class="^.*"] inhibit_idle fullscreen
+for_window [class="^.*"] inhibit_idle fullscreen
+for_window [app_id="^.*"] inhibit_idle fullscreen
 exec swayidle -w \
 	timeout 300 'swaylock -fF' \
 	before-sleep 'swaylock -fF'
