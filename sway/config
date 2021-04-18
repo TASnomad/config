@@ -1,0 +1,163 @@
+# FIXME: change it with your own touchpad identifier
+# find it with swaymsg -t get_inputs
+input "XXX:XXX:XXX:XXX" {
+	dwt enabled
+	left_handed enabled
+	tap enabled
+	natural_scroll enabled
+	middle_emulation enabled
+}
+
+input * {
+	xkb_layout "fr"
+	xkb_variant "colemak,,typewriter"
+	xkb_options "grp:win_space_toggle"
+	xkb_numlock enabled
+}
+
+output * {
+	subpixel rgb
+	bg /home/nomad/Pictures/wallpapers/wallpaper.png fill
+}
+
+set $mod Mod4
+set $term alacritty
+set $menu wofi --hide-scroll | xargs swaymsg exec --
+set $left h
+set $down j
+set $up k
+set $right l
+
+font pango:Ubuntu Mono Nerd Font 14
+default_border pixel 2
+titlebar_border_thickness 2
+focus_follows_mouse yes
+
+exec swayidle -w \
+	timeout 300 'swaylock -fF' \
+	before-sleep 'swaylock -fF'
+
+bindsym $mod+Return exec $term
+bindsym $mod+Shift+Return exec $menu
+bindsym $mod+Shift+F1 exec firefox
+bindsym $mod+Shift+F2 exec pcmanfm
+bindsym $mod+Shift+c kill
+bindsym $mod+Shift+r reload
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+bindsym print exec grim - | swappy -f -
+bindsym Shift+print exec grim -g "$(slurp)" - | swappy -f -
+
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+bindsym $mod+ampersand workspace number 1
+bindsym $mod+eacute workspace number 2
+bindsym $mod+quotedbl workspace number 3
+bindsym $mod+apostrophe workspace number 4
+bindsym $mod+parenleft workspace number 5
+bindsym $mod+minus workspace number 6
+bindsym $mod+egrave workspace number 7
+bindsym $mod+underscore workspace number 8
+bindsym $mod+ccedilla workspace number 9
+#bindsym $mod+agrave workspace number 0
+
+bindsym $mod+Shift+ampersand move container to workspace number 1
+bindsym $mod+Shift+eacute move container to workspace number 2
+bindsym $mod+Shift+quotedbl move container to workspace number 3
+bindsym $mod+Shift+apostrophe move container to workspace number 4
+bindsym $mod+Shift+parenleft move container to workspace number 5
+bindsym $mod+Shift+minus move container to workspace number 6
+bindsym $mod+Shift+egrave move container to workspace number 7
+bindsym $mod+Shift+underscore move container to workspace number 8
+bindsym $mod+Shift+ccedilla move container to workspace number 9
+#bindsym $mod+Shift+agrave move container to workspace number 10
+bindsym $mod+Tab workspace back_and_forth
+
+bindsym $mod+s splith
+bindsym $mod+v splitv
+bindsym $mod+m layout tabbed
+bindsym $mod+t layout toggle split
+bindsym $mod+f fullscreen
+bindsym $mod+space floating toggle
+bindsym $mod+Shift+s focus mode_toggle
+bindsym $mod+a focus parent
+bindsym $mod+Shift+a focus child
+bindsym Mod1+Ctrl+Delete exec swaylock -fF
+bindsym $mod+Shift+q exec swaynag -t custom -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+
+bindsym $mod+alt+$left resize shrink width 20px
+bindsym $mod+alt+$up resize grow height 20px
+bindsym $mod+alt+$down resize shrink height 20px
+bindsym $mod+alt+$right resize grow width 20px
+
+bindsym --locked XF86AudioRaiseVolume exec sh -c "pactl set-sink-mute @DEFAULT_SINK@ false ; pactl set-sink-volume @DEFAULT_SINK@ +5%"
+bindsym --locked XF86AudioLowerVolume exec sh -c "pactl set-sink-mute @DEFAULT_SINK@ false ; pactl set-sink-volume @DEFAULT_SINK@ -5%"
+bindsym --locked XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym XF86MonBrightnessUp exec light -A 10 && notify-send "󰃞 Light" "Brightness: $(light)%"
+bindsym XF86MonBrightnessDown exec light -U 10 && notify-send "󰃞 Light" "Brightness: $(light)%"
+bindsym --locked XF86AudioPlay exec mpc toggle
+bindsym --locked XF86AudioNext exec mpc next
+bindsym --locked XF86AudioPrev exec mpc prev
+
+mode "resize" {
+	bindsym $left resize shrink width 10 px or 10 ppt
+	bindsym $down resize grow height 10 px or 10 ppt
+	bindsym $up resize shrink height 10 px or 10 ppt
+	bindsym $right resize grow width 10 px or 10 ppt
+
+
+	bindsym Left resize shrink width 10 px or 10 ppt
+	bindsym Down resize grow height 10 px or 10 ppt
+	bindsym Up resize shrink height 10 px or 10 ppt
+	bindsym Right resize grow width 10 px or 10 ppt
+
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+	bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+gaps inner 2
+
+set $nord0   #2E3440
+set $nord1   #3B4252
+set $nord2   #434C5E
+set $nord3   #4C566A
+set $nord4   #D8DEE9
+set $nord5   #E5E9F0
+set $nord6   #ECEFF4
+set $nord7   #8FBCBB
+set $nord8   #88C0D0
+set $nord9   #81A1C1
+set $nord10  #5E81AC
+set $nord11  #BF616A
+set $nord12  #D08770
+set $nord13  #EBCB8B
+set $nord14  #A3BE8C
+set $nord15  #B48EAD
+
+#class 			#border #bg 	#txt 	#indic 	#child
+client.focused 		$nord3 	$nord8 	$nord2 	$nord7 	$nord8
+client.focused_inactive $nord3 	$nord0 	$nord4 	$nord3 	$nord3
+client.unfocused 	$nord3 	$nord0 	$nord4 	$nord3 	$nord3
+client.urgent 		$nord13 $nord13 $nord0 	$nord7 	$nord13
+
+bar {
+	swaybar_command waybar
+}
+
+exec --no-startup-id nm-applet
+exec --no-startup-id mako
+exec --no-startup-id blueman-tray
+exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
+
+include /etc/sway/config.d/*
+# vim:ft=config

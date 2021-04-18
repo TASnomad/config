@@ -1,0 +1,105 @@
+{
+	"position": "bottom",
+		"height": 30,
+		"modules-left": ["sway/workspaces", "sway/mode", "sway/window"],
+		"modules-right": ["pulseaudio", "network", "cpu", "memory", "battery", "custom/date", "clock", "tray", "custom/power"],
+		// Modules configuration
+		"sway/workspaces": {
+			"disable-scroll": true,
+			"all-outputs": true,
+			"format": "{icon}",
+			"persistent_workspaces": {
+				"1": [],
+				"2": [],
+				"3": [],
+				"4": [],
+				"5": [],
+				"6": [],
+				"7": [],
+				"8": [],
+				"9": []
+				// "0": []
+			},
+			"format-icons": {
+				"1": "󰋜",
+				"2": "󰈹",
+				"3": "󰠮",
+				"4": "󰭹",
+				"5": "󱓷",
+				"6": "󱇧",
+				"7": "󰊢",
+				"8": "󰖲",
+				"9": "󰕧"
+				// "0": "󰝚"
+			}
+		},
+		"sway/window": {
+			"format": " {} ",
+			"max-length": 50
+		},
+		"sway/mode": {
+			"format": "󰖲 {}",
+			"max-length": 50
+		},
+		"custom/date": {
+			"format": "󰸗 {}",
+			"interval": 3600,
+			"exec": "date +'%d-%m-%+4Y'"
+		},
+		"custom/power": {
+			"format": "󰐥",
+			"on-click": "swaynag -t custom -m 'Are you sure you want to shutdown your device?' -b 'Shutdown' 'poweroff'"
+		},
+		"clock": {
+			"format": "󰅐 {:%H:%M}",
+			"tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+			"format-alt": "{:%Y-%m-%d}"
+		},
+		"cpu": {
+			"interval": 30,
+			"format": " {}%",
+			"max-length": 10
+		},
+		"memory": {
+			"interval": 30,
+			"format": "{used:0.1f}G/{total:0.1f}G"
+		},
+		"battery": {
+			"states": {
+				"warning": 30,
+				"critical": 15
+			},
+			"format": "{icon} {capacity}%",
+			"format-charging": "󰂄 {capacity}%",
+			"format-plugged": "󰂄{capacity}%",
+			"format-alt": "{time} {icon}",
+			"format-full": "󱈑 {capacity}%",
+			"format-icons": ["󱊡", "󱊢", "󱊣"]
+		},
+		"tray": {
+			"icon-size": 21,
+			"spacing": 10
+		},
+		"network": {
+			"format-wifi": "  {essid} ({signalStrength})%",
+			"format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
+			"format-linked": "{ifname} (No IP) ",
+			"format-disconnected": "󰤮 Disconnected",
+			"format-alt": "{ifname}: {ipaddr}/{cidr}"
+		},
+		"pulseaudio": {
+			"format": "{icon}  {volume}%",
+			"format-muted": "󰖁 Muted",
+			"format-icons": {
+				"headphone": "",
+				"hands-free": "",
+				"headset": "",
+				"phone": "",
+				"portable": "",
+				"car": "",
+				"default": ["", "", ""]
+			},
+			"on-click": "pavucontrol"
+		}
+}
+
