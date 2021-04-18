@@ -1,7 +1,16 @@
 #!/bin/sh
 
+cmd="dmenu -c -l 20 -p 'Manual:' -fn 'Fira Code Nerd Font 13'"
+
+if [ $XDG_SESSION_TYPE == "wayland" ]
+then
+	cmd="wofi -d -p Manual:"
+fi
+
 term="st"
-manual="$(man -k . | rofi -matching fuzzy -dmenu -p 'Manual:' -font "Fira Code Nerd Font 13" | awk '{print $1}')"
+manual="$(man -k . | $cmd | awk '{print $1}')"
+
+echo $manual
 
 if [[ ! -z "$manual" ]]; then
 	$term -t "$manual manual" -e man $manual

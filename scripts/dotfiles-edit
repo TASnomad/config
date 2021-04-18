@@ -6,9 +6,17 @@ bspwm
 nvim
 zsh
 vim
+sway
 quit")
 
-choice=$(echo -e "${options[@]}" | rofi -dmenu -c -F -i -l 20 -nb '#191919' -nf '#fea63c' -sb '#fea63c' -sf '#191919' -fn 'Fira Code Nerd Font:bold:size=14' -p 'Edit configuration:')
+cmd="rofi -dmenu -c -F -i -l 20 -nb '#191919' -nf '#fea63c' -sb '#fea63c' -sf '#191919' -fn 'Fira Code Nerd Font:bold:size=14' -p 'Edit configuration:'"
+
+if [ $XDG_SESSION_TYPE == "wayland" ]
+then
+	cmd="wofi -d -p Edit configuration:"
+fi
+
+choice=$(echo -e "${options[@]}" | $cmd)
 
 case "$choice" in
 	alacritty) choice="$HOME/.config/alacritty/alacritty.yml";;
@@ -16,6 +24,7 @@ case "$choice" in
 	bash) choice="$HOME/.bashrc";;
 	doom) choice="$HOME/.doom.d";;
 	nvim) choice="$HOME/.config/nvim/init.vim";;
+	sway) choice="$HOME/.config/sway/config";;
 	quit) exit 1;;
 	vim) choice="$HOME/.vimrc";;
 	zsh)
