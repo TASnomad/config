@@ -81,6 +81,7 @@
 			"spacing": 10
 		},
 		"network": {
+			"tooltip": false,
 			"format-wifi": "  {essid} ({signalStrength})%",
 			"format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
 			"format-linked": "{ifname} (No IP) ",
@@ -88,7 +89,12 @@
 			"format-alt": "{ifname}: {ipaddr}/{cidr}"
 		},
 		"pulseaudio": {
-			"format": "{icon}  {volume}%",
+			"tooltip": false,
+			"format": "{format_source} {icon} {volume}%",
+			"format-source-muted": "",
+			"format-source": " {volume}%",
+			"format-bluetooth": "{format_source} {icon} {volume}%",
+			"format-bluetooth-muted": " {icon} {format_source}",
 			"format-muted": "󰖁 Muted",
 			"format-icons": {
 				"headphone": "",
@@ -99,7 +105,9 @@
 				"car": "",
 				"default": ["", "", ""]
 			},
-			"on-click": "pavucontrol"
+			"on-click-right": "pavucontrol",
+			"on-click-middle": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
+			"on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle"
 		}
 }
 
