@@ -42,6 +42,7 @@ floating_modifier $mod normal
 # Inhibit Idle if a steam game is focused (should work most games)
 for_window [class="^.*"] inhibit_idle fullscreen
 for_window [app_id="^.*"] inhibit_idle fullscreen
+for_window [class="steam_app*"] inhibit_idle fullscreen
 for_window [class="steam_app*"] inhibit_idle focus
 exec swayidle -w \
 	timeout 300 'swaylock -fF' \
