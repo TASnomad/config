@@ -3,6 +3,8 @@
 input "XXX:XXX:XXX:XXX" {
 	dwt enabled
 	left_handed enabled
+	middle_emulation enabled
+	tap_button_map lmr
 	tap enabled
 	natural_scroll enabled
 	middle_emulation enabled
@@ -33,11 +35,18 @@ default_border pixel 2
 titlebar_border_thickness 2
 focus_follows_mouse yes
 
-# Inhibit Idle if a window is fullscreen for_window [class="^.*"] inhibit_idle fullscreen
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod normal
+
+# Inhibit Idle if a steam game is focused (should work most games)
 for_window [class="^.*"] inhibit_idle fullscreen
 for_window [app_id="^.*"] inhibit_idle fullscreen
+for_window [class="steam_app*"] inhibit_idle focus
 exec swayidle -w \
 	timeout 300 'swaylock -fF' \
+	timeout 600 'swaymsg "output * dpms off"' \
+	resume 'swaymsg "output * dpms on"' \
 	before-sleep 'swaylock -fF'
 
 bindsym $mod+Return exec $term
@@ -127,6 +136,25 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
+
+mode "position" {
+	bindsym $left move left 10 px or 10 ppt
+	bindsym $down move down 10 px or 10 ppt
+	bindsym $up move up 10 px or 10 ppt
+	bindsym $right move right 10 px or 10 ppt
+
+
+	bindsym Left move left 10 px or 10 ppt
+	bindsym Down move down 10 px or 10 ppt
+	bindsym Up move up 10 px or 10 ppt
+	bindsym Right move right 10 px or 10 ppt
+
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+	bindsym $mod+p mode "default"
+}
+
+bindsym $mod+p mode "position"
 
 gaps inner 2
 
