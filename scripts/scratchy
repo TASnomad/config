@@ -1,0 +1,29 @@
+#!/bin/sh
+
+function usage {
+	echo "Usage: $0 -n <scratchpad>"
+	exit 1
+}
+
+while getopts ":n:" o; do
+	case "${o}" in
+		n)
+			name=${OPTARG}
+			;;
+		*)
+			usage
+			;;
+	esac
+done
+
+shift $((OPTIND-1))
+
+if [ -z $name ]; then
+	usage
+fi
+
+ids=$(xdotool search --class $name)
+
+for id in $ids; do
+	bspc node $id --flag hidden -f
+done
