@@ -19,6 +19,7 @@ run blueman-tray
 run blueberry-tray
 run volumeicon
 #run redshift-gtk
+run xscreensaver -no-splash
 run nitrogen --restore
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 /usr/lib/xfce4/notifyd/xfce4-notifyd &
