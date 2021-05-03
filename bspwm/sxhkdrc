@@ -41,6 +41,14 @@ super + {_,shift +} {ampersand,eacute,quotedbl,apostrophe,parenleft,minus,egrave
 super + {grave,Tab}
 	bspc {node,desktop} -f last
 
+# preselect next window location
+super + ctrl + {h,j,k,l}
+	bspc node -p {west,south,north,east}
+
+# cancel preselect
+super + ctrl + c
+	bspc node -p cancel
+
 ### move / resize keybindings ##
 
 # expand a window
@@ -69,18 +77,24 @@ XF86MonBrightness{Down,Up}
 
 # Increment/decrement audio volume
 XF86Audio{Lower,Raise}Volume
-	amixer set Master 10%{-,+}
+	# amixer set Master 10%{-,+}
+	pactl set-sink-volume @DEFAULT_SINK@ {-,+}10%
 
 # Mute/unmute audio
 XF86AudioMute
-	amixer -D pulse set Master 1+ toggle
+	# amixer -D pulse set Master 1+ toggle
+	pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+# Mute/unmute micro
+XF86AudioMicMute
+	pact set-source-mute @DEFAULT_SOURCE@ toggle
 
 XF86Audio{Play,Next,Prev,Stop}
 	playerctl {play-pause,next,previous,stop}
 
 # open rofi
 super + shift + Return
-	rofi -show run -matching fuzzy -font "Fira Code Nerd Font 13"
+	dmenu_run -c -l 20 -F -i -nb '#2E3440' -nf '#EBCB8B' -sb '#EBCB8B' -sf '#2E3440' -fn 'Fira Code Nerd Font:bold:size=13'
 
 # lock the screen
 super + control + l
@@ -96,8 +110,11 @@ super + control + e
 super + b
 	polybar-msg cmd toggle
 
-super + F1
-	chromium
+super + shift + F1
+	firefox
 
-super + F2
+super + shift + F2
 	pcmanfm
+
+super + shift + F3
+	~/config/scripts/scratchy -n mathspad
