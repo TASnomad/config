@@ -1,0 +1,10 @@
+[Unit]
+Description=Redshift GTK service
+After=graphical-session.target
+
+[Service]
+ExecStart=@bindir@/redshift-gtk
+Restart=always
+
+[Install]
+WantedBy=graphical-session.target
