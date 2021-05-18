@@ -332,11 +332,6 @@ myKeys =
           where nonNSP          = WSIs (return (\ws -> W.tag ws /= "NSP"))
                 nonEmptyNonNSP  = WSIs (return (\ws -> isJust (W.stack ws) && W.tag ws /= "NSP"))
 
-
-        -- { manageHook            = myManageHook <+> manageDocks
-        -- , layoutHook            = avoidStruts $ showWName' myShowWNameTheme myLayoutHook
-        --, handleEventHook       = docksEventHook <+> fullscreenEventHook -- this may show border on unfocused monitors
-
 main :: IO ()
 main = do
      xmproc <- spawnPipe "xmobar -d ~/config/xmobar/xmobarrc"
