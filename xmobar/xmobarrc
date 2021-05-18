@@ -1,0 +1,63 @@
+Config {
+    font = "xft:Fira Code Nerd Font:pixelsize=16:antialias=true:hinting=true"
+  , additionalFonts = [ "xft:FontAwesome:pixelsize=14:antialias=true:hinting=true" ]
+  , persistent = True
+  , allDesktops = True
+  , bgColor = "#2E3440"
+  , fgColor = "#ECEFF4"
+  , alpha = 0
+  , position = TopP 0 100
+  , overrideRedirect = False
+  , lowerOnStart = True
+  , hideOnStart = False
+  , sepChar = "%"
+  , alignSep = "}{"
+  , template = "%UnsafeStdinReader%  %battery% | %memory% | %multicpu% | %bright% | %dynnetwork% }{ %date%"
+  , commands = [
+      Run Date "<fc=#ECEFF4>%F (%a) %T</fc>" "date" 10
+    , Run MultiCpu [
+      "--template", " <total>%"
+      , "--Low", "50"
+      , "--High", "85"
+      , "--low", "darkgreen"
+      , "--normal", "darkorange"
+      , "--high", "darkred"
+    ] 10
+    , Run Memory [
+      "--template", "  <usedbar> (<usedratio>%)"
+      , "--Low", "20"
+      , "--High", "90"
+      , "--low", "darkgreen"
+      , "--normal", "darkorange"
+      , "--high", "darkred"
+    ] 10
+    , Run DynNetwork [
+        "--template", "<dev>: <tx>kB/s|<rx>kB/s"
+      , "--Low", "1000"
+      , "--High", "5000"
+      , "--low", "darkgreen"
+      , "--normal", "darkorange"
+      , "--high", "darkred"
+    ] 10
+    , Run Brightness [
+        "--template", " <percent>%"
+      , "--"
+      , "-D", "intel_backlight"
+      , "--brightness-icon-pattern", "<icon=bright_%%.xpm/>"
+    ] 60
+    , Run Battery [
+        "--template", "  <acstatus> (<left>%)"
+      , "--Low", "10"
+      , "--High", "80"
+      , "--low", "darkred"
+      , "--normal", "darkorange"
+      , "--high", "darkgreen"
+      , "--"
+      , "-o", "<left>% (<timeleft>)"
+      , "-O", "<fc=#D08770>Charging</fc>"
+      , "-i", "<fc=#A3BE8C>Charged</fc>"
+    ] 50
+    , Run UnsafeStdinReader
+  ]
+}
+-- vim:filetype=haskell
