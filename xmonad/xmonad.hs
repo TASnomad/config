@@ -13,7 +13,7 @@ import XMonad.Config.Azerty
 
 -- Actions
 import XMonad.Actions.CopyWindow (kill1)
-import XMonad.Actions.CycleWS (Direction1D(..), moveTo, shiftTo, WSType(..), nextScreen, prevScreen)
+import XMonad.Actions.CycleWS (Direction1D(..), moveTo, shiftTo, WSType(..), nextScreen, prevScreen, toggleWS, toggleWS')
 import XMonad.Actions.GridSelect
 import XMonad.Actions.MouseResize
 import XMonad.Actions.Promote
@@ -34,6 +34,9 @@ import XMonad.Hooks.WorkspaceHistory
 
 -- Layouts
 import XMonad.Layout.Accordion
+import XMonad.Layout.BinarySpacePartition
+import XMonad.Layout.Gaps
+import XMonad.Layout.NoFrillsDecoration
 import XMonad.Layout.GridVariants (Grid(Grid))
 import XMonad.Layout.SimplestFloat
 import XMonad.Layout.Spiral
@@ -184,7 +187,7 @@ tall     = renamed [Replace "tall"]
            $ addTabs shrinkText myTabTheme
            $ subLayout [] (smartBorders Simplest)
            $ limitWindows 12
-           $ mySpacing 8
+           $ mySpacing 4
            $ ResizableTall 1 (3/100) (1/2) []
 magnify  = renamed [Replace "magnify"]
            $ smartBorders
@@ -192,7 +195,7 @@ magnify  = renamed [Replace "magnify"]
            $ subLayout [] (smartBorders Simplest)
            $ magnifier
            $ limitWindows 12
-           $ mySpacing 8
+           $ mySpacing 4
            $ ResizableTall 1 (3/100) (1/2) []
 monocle  = renamed [Replace "monocle"]
            $ smartBorders
@@ -207,14 +210,14 @@ grid     = renamed [Replace "grid"]
            $ addTabs shrinkText myTabTheme
            $ subLayout [] (smartBorders Simplest)
            $ limitWindows 12
-           $ mySpacing 8
+           $ mySpacing 4
            $ mkToggle (single MIRROR)
            $ Grid (16/10)
 spirals  = renamed [Replace "spirals"]
            $ smartBorders
            $ addTabs shrinkText myTabTheme
            $ subLayout [] (smartBorders Simplest)
-           $ mySpacing' 8
+           $ mySpacing' 4
            $ spiral (6/7)
 threeCol = renamed [Replace "threeCol"]
            $ smartBorders
@@ -250,20 +253,12 @@ myTabTheme = def { fontName            = myFont
                  , inactiveTextColor   = "#D8DEE9"
                  }
 
--- Theme for showWName which prints current workspace when you change workspaces.
-myShowWNameTheme :: SWNConfig
-myShowWNameTheme = def
-    { swn_font              = "xft:Ubuntu:bold:size=60"
-    , swn_fade              = 1.0
-    , swn_bgcolor           = "#1c1f24"
-    , swn_color             = "#ffffff"
-    }
-
 -- The layout hook
 myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts floats
                $ mkToggle (NBFULL ?? NOBORDERS ?? EOT) myDefaultLayout
              where
-               myDefaultLayout =     withBorder myBorderWidth tall
+               myDefaultLayout =     withBorder myBorderWidth emptyBSP
+                                 ||| tall
                                  ||| magnify
                                  ||| noBorders monocle
                                  ||| floats
@@ -315,6 +310,8 @@ myKeys =
         , ("M-j", windows W.focusDown)
         , ("M-k", windows W.focusUp)
         , ("M-S-<Tab>", sendMessage NextLayout)
+        , ("M-<Space>", sendMessage (MT.Toggle NBFULL))
+        , ("M-<Tab>", toggleWS' ["NSP"]) -- Switch ws back & forth (ignoring scratchpads)
         , ("M-S-<F1>", spawn "firefox")
         , ("M-S-<F2>", spawn "pcmanfm")
         , ("M-S-<F3>", namedScratchpadAction myScratchPads "terminal")
@@ -341,7 +338,7 @@ main = do
         , modMask               = myModMask
         , terminal              = myTerminal
         , startupHook           = myStartupHook
-        , layoutHook            = showWName' myShowWNameTheme myLayoutHook
+        , layoutHook            = myLayoutHook
         , workspaces            = myWorkspaces
         , borderWidth           = myBorderWidth
         , normalBorderColor     = myNormColor
