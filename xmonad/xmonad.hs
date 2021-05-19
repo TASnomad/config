@@ -305,6 +305,7 @@ myKeys =
         , ("M-S-<Return>", spawn "dmenu_run -c -l 20 -F -i -nb '#2E3440' -nf '#EBCB8B' -sb '#EBCB8B' -sf '#2E3440' -fn 'Fira Code Nerd Font:bold:size=13'")
         , ("M-<Return>", spawn myTerminal)
         , ("M-S-c", kill)
+        , ("C-M1-<Delete>", spawn "xscreensaver-command -lock")
         , ("M-f", sendMessage (T.Toggle "floats"))
         , ("M-t", withFocused $ windows . W.sink)
         , ("M-j", windows W.focusDown)
