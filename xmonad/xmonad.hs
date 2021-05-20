@@ -309,9 +309,9 @@ myManageHook = composeAll
 systemPromptCmds = [
        ("Exit", io exitSuccess),
        ("Lock", spawn "xscreensaver-command -lock"),
-       ("Reboot", spawn "sudo reboot"),
+       ("Reboot", spawn "reboot"),
        ("Restart", restart "xmonad" True),
-       ("Shutdown", spawn "sudo poweroff")
+       ("Shutdown", spawn "poweroff")
     ]
 
 exitPromptxKb :: M.Map (KeyMask,KeySym) (XP ())
