@@ -23,6 +23,15 @@ import XMonad.Actions.WithAll (sinkAll, killAll)
 import qualified XMonad.Actions.Search as S
 import qualified XMonad.StackSet as W
 
+-- Prompts
+import XMonad.Prompt
+import XMonad.Prompt.Input
+import XMonad.Prompt.FuzzyMatch
+import XMonad.Prompt.XMonad
+import XMonad.Prompt.Shell
+import XMonad.Prompt.Man
+import Control.Arrow (first)
+
 -- Hooks
 import XMonad.Hooks.DynamicLog (dynamicLogWithPP, wrap, xmobarPP, xmobarColor, shorten, PP(..))
 import XMonad.Hooks.EwmhDesktops  -- for some fullscreen events, also for xcomposite in obs.
@@ -297,13 +306,80 @@ myManageHook = composeAll
      , isFullscreen -->  doFullFloat
      ] <+> namedScratchpadManageHook myScratchPads
 
+systemPromptCmds = [
+       ("Exit", io exitSuccess),
+       ("Lock", spawn "xscreensaver-command -lock"),
+       ("Reboot", spawn "sudo reboot"),
+       ("Restart", restart "xmonad" True),
+       ("Shutdown", spawn "sudo poweroff")
+    ]
+
+exitPromptxKb :: M.Map (KeyMask,KeySym) (XP ())
+exitPromptxKb = M.fromList $
+    map (first $ (,) controlMask)
+    [ (xK_u, killBefore)
+    ]
+    ++
+    map (first $ (,) 0)
+    [ (xK_Return, setSuccess True >> setDone True)
+    , (xK_KP_Enter, setSuccess True >> setDone True)
+    , (xK_BackSpace, deleteString Prev)
+    , (xK_Delete, deleteString Next)
+    , (xK_q, quit)
+    , (xK_Escape, quit)
+    ]
+
+exitPromptXPConfig :: XPConfig
+exitPromptXPConfig = def
+    { font = myFont
+    , bgColor = "#2E3440"
+    , fgColor = "#D8DEE9"
+    , bgHLight = "#8FBCBB"
+    , fgHLight = "#000000"
+    , borderColor = "#BF616A"
+    , promptBorderWidth = 4
+    , promptKeymap = vimLikeXPKeymap
+    -- , promptKeymap = exitPromptXPConfig
+    , position = CenteredAt 0.5 0.5 -- Centered
+    , height = 50
+    , historySize = 256
+    , defaultText = []
+    , showCompletionOnTab = True
+    , searchPredicate = fuzzyMatch
+    , alwaysHighlight = True
+    , maxComplRows = Nothing
+    }
+
+runnerPromptXPConfig :: XPConfig
+runnerPromptXPConfig = def
+    { font = myFont
+    , bgColor = "#2E3440"
+    , fgColor = "#D8DEE9"
+    , bgHLight = "#8FBCBB"
+    , fgHLight = "#000000"
+    , borderColor = "#88C0D0"
+    , promptBorderWidth = 4
+    , promptKeymap = vimLikeXPKeymap
+    , position = CenteredAt 0.1 0.5
+    , height = 50
+    , historySize = 256
+    , defaultText = []
+    , showCompletionOnTab = True
+    , searchPredicate = fuzzyMatch
+    , alwaysHighlight = True
+    , maxComplRows = Just 15
+    }
+
 myKeys :: [(String, X ())]
 myKeys =
         [ ("M-C-r", spawn "xmonad --recompile")  -- Recompiles xmonad
         , ("M-S-r", spawn "xmonad --restart")    -- Restarts xmonad
-        , ("M-S-q", io exitSuccess)
-        , ("M-S-<Return>", spawn "dmenu_run -c -l 20 -F -i -nb '#2E3440' -nf '#EBCB8B' -sb '#EBCB8B' -sf '#2E3440' -fn 'Fira Code Nerd Font:bold:size=13'")
+        -- , ("M-S-q", io exitSuccess)
+        , ("M-S-q", xmonadPromptC systemPromptCmds exitPromptXPConfig)
+        -- , ("M-S-<Return>", spawn "dmenu_run -c -l 20 -F -i -nb '#2E3440' -nf '#EBCB8B' -sb '#EBCB8B' -sf '#2E3440' -fn 'Fira Code Nerd Font:bold:size=13'")
+        , ("M-S-<Return>", shellPrompt runnerPromptXPConfig)
         , ("M-<Return>", spawn myTerminal)
+        , ("M-M1-k", manPrompt runnerPromptXPConfig)
         , ("M-S-c", kill)
         , ("C-M1-<Delete>", spawn "xscreensaver-command -lock")
         , ("M-f", sendMessage (T.Toggle "floats"))
@@ -325,7 +401,9 @@ myKeys =
         , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ -10%")
         , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +10%")
         , ("<XF86AudioMicMute>", spawn "pactl set-source-mute @DEFAULT_SOURCE@ toggle")
-        , ("<XF86AudioMute>", spawn "pactl set-sink-volume @DEFAULT_SINK@ toggle")
+        , ("<XF86AudioMute>", spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
+        , ("<XF86MonBrightnessDown>", spawn "xbacklight -dec 10")
+        , ("<XF86MonBrightnessUp>", spawn "xbacklight -inc 10")
         ]
           where nonNSP          = WSIs (return (\ws -> W.tag ws /= "NSP"))
                 nonEmptyNonNSP  = WSIs (return (\ws -> isJust (W.stack ws) && W.tag ws /= "NSP"))
