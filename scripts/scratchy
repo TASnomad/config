@@ -1,14 +1,17 @@
 #!/bin/sh
 
 function usage {
-	echo "Usage: $0 -n <scratchpad>"
+	echo "Usage: $0 -n <scratchpad> [-q <query>]"
 	exit 1
 }
 
-while getopts ":n:" o; do
+while getopts ":n:q:" o; do
 	case "${o}" in
 		n)
 			name=${OPTARG}
+			;;
+		q)
+			query=${OPTARG}
 			;;
 		*)
 			usage
@@ -18,11 +21,15 @@ done
 
 shift $((OPTIND-1))
 
+if [ -z $query ]; then
+	query="class"
+fi
+
 if [ -z $name ]; then
 	usage
 fi
 
-ids=$(xdotool search --class $name)
+ids=$(xdotool search --$query $name)
 
 for id in $ids; do
 	bspc node $id --flag hidden -f
