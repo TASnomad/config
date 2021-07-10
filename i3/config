@@ -10,6 +10,8 @@
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
+set $term alacritty
+focus_follows_mouse yes
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -24,7 +26,8 @@ font pango:FiraCode Nerd Font 10
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+# exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+exec --no-startup-id xss-lock --transfer-sleep-lock -- xscreensaver-command -lock --nofork
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
@@ -32,21 +35,41 @@ exec --no-startup-id nm-applet
 exec --no-startup-id numlockx on
 exec --no-startup-id blueman-tray
 exec --no-startup-id volumeicon
+exec_always --no-startup-id xscreensaver -no-splash
+exec_always --no-startup-id xsetroot -cursor_name left_ptr
 exec --no-startup-id nitrogen --restore
 exec --no-startup-id picom --config ~/config/picom.conf
 exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id dunst -c ~/.config/dunst/dunstrc
-#exec --no-startup-id ~/config/polybar/i3-launch.sh
-exec_always --no-startup-id ~/config/polybar/i3-launch.sh
-#exec_always --no-startup-id ~/config/polybar/nord/launch.sh
 # exec --no-startup-id /usr/lib/x86_64-linux-gnu/xfce4/xfce4-notifyd
 
-# Use pactl to adjust volume in PulseAudio.
-set $refresh_i3status killall -SIGUSR1 i3status
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+# scratchpads
+exec --no-startup-id $term -t terminal
+exec $term -t sysmonitor -e htop
+exec qalculate-gtk
+exec $term -t mixer -e alsamixer
+
+# Windows rules
+for_window [title="terminal"] move to scratchpad
+for_window [title="sysmonitor"] move scratchpad, move position center
+for_window [instance="(?i)qualculate-gtk"] move scratchpad, border 1pixel
+for_window [title="mixer"] move scratchpad, move position center
+for_window [class="^.*"] border pixel 2
+for_window [class="(?i)steam"] floating enable
+for_window [class="(?i)arandr"] floating enable
+for_window [window_role="confirm"] floating enable
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="bubble"] floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [window_role="Preferences"] floating enable
+for_window [window_type="dialog"] floating enable
+for_window [window_type="menu"] floating enable
+
+popup_during_fullscreen smart
+hide_edge_borders smart
+
+gaps inner 2
+#gaps top 20
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -58,7 +81,7 @@ bindsym $mod+Return exec alacritty
 bindsym $mod+Shift+c kill
 
 # start dmenu (a program launcher)
-bindsym $mod+Shift+Return exec dmenu_run -c -l 20 -F -i -nb '#2E3440' -nf '#EBCB8B' -sb '#EBCB8B' -sf '#2E3440' -fn 'Fira Code Nerd Font:bold:size=13'
+bindsym $mod+Shift+Return exec dmenu_run -c -l 20 -F -i -fn 'Fira Code Nerd Font:bold:size=13'
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
@@ -67,6 +90,29 @@ bindsym $mod+Shift+Return exec dmenu_run -c -l 20 -F -i -nb '#2E3440' -nf '#EBCB
 
 bindsym $mod+Shift+F1 exec --no-startup-id firefox
 bindsym $mod+Shift+F2 exec --no-startup-id pcmanfm
+bindsym $mod+Shift+F3 [title="terminal"] scratchpad show, move position center
+bindsym $mod+Shift+F4 [title="sysmonitor"] scratchpad show
+bindsym $mod+Shift+F5 [instance="(?i)qalculate-gtk"] scratchpad show
+bindsym $mod+Shift+F6 [title="mixer"] scratchpad show
+
+# Use pactl to adjust volume in PulseAudio.
+set $refresh_i3status killall -SIGUSR1 i3status
+bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause 
+bindsym XF86AudioNext exec --no-startup-id playerctl next
+bindsym XF86AudioPrev exec --no-startup-id playerctl previous
+bindsym XF86AudioStop exec --no-startup-id playerctl stop
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && $refresh_i3status
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 10
+bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 10
+
+# switch to previous workspace
+bindsym $mod+Tab workspace back_and_forth
+
+# Lock the screen
+bindsym Mod1+Ctrl+Delete exec xscreensaver-command -lock
 
 # change focus
 bindsym $mod+j focus left
@@ -148,7 +194,7 @@ bindsym $mod+Shift+ampersand move container to workspace number $ws1
 bindsym $mod+Shift+eacute move container to workspace number $ws2
 bindsym $mod+Shift+quotedbl move container to workspace number $ws3
 bindsym $mod+Shift+apostrophe move container to workspace number $ws4
-bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+parenleft move container to workspace number $ws5
 bindsym $mod+Shift+minus move container to workspace number $ws6
 bindsym $mod+Shift+egrave move container to workspace number $ws7
 bindsym $mod+Shift+underscore move container to workspace number $ws8
@@ -158,8 +204,9 @@ bindsym $mod+Shift+agrave move container to workspace number $ws10
 # reload the configuration file
 #bindsym $mod+Shift+c reload
 #bindsym $mod+Alt+c reload
+bindsym $mod+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r exec i3-msg reload && i3-msg restart
+bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+q exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
@@ -190,12 +237,6 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-popup_during_fullscreen smart
-for_window [class="^.*"] border pixel 2
-
-gaps inner 2
-gaps top 20
-
 # Nord theme colors
 set $nord0   #2E3440
 set $nord1   #3B4252
@@ -214,24 +255,36 @@ set $nord13  #EBCB8B
 set $nord14  #A3BE8C
 set $nord15  #B48EAD
 
+#class 			#border #bg 	#txt 	#indic 	#child
+client.focused 		$nord3 	$nord8 	$nord2 	$nord7 	$nord8
+client.focused_inactive $nord3 	$nord0 	$nord4 	$nord3 	$nord3
+client.unfocused 	$nord3 	$nord0 	$nord4 	$nord3 	$nord3
+client.urgent 		$nord13 $nord13 $nord0 	$nord7 	$nord13
+
+
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-#bar {
-#        status_command ~/config/polybar/i3-launch.sh
-	#tray_output primary
-	#font pango:FiraCode Nerd Font 14px
+bar {
+	#status_command i3status -c ~/config/i3/i3status.conf
+	# HACK: this custom script allows to have active window into i3bar
+	status_command ~/config/i3/my_i3status.sh -c ~/config/i3/i3status.conf
+	position bottom
+	mode dock
+	workspace_buttons yes
+	tray_output primary
+	verbose yes
+	font pango:FiraCode Nerd Font 14px
 
-	#position top
-	#height 25
+	colors {
+		background $nord0
+		statusline $nord8
+		separator  $nord3
 
-	#colors {
-	#	background $nord0
-	#	statusline $nord8
-
-	#	focused_workspace $nord3 $nord8
-	#	active_workspace $nord3 $nord8
-	#	inactive_workspace $nord8 $nord3
-	#	urgent_workspace $nord3 $nord15
-	#}
-#}
-
+		focused_workspace  $nord3 $nord8
+		active_workspace   $nord8 $nord3
+		inactive_workspace $nord0 $nord1
+		urgent_workspace   $nord3 $nord11
+		binding_mode       $nord12 $nord12 $nord3
+	}
+}
+# vim:ft=config
