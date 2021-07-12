@@ -109,6 +109,8 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ to
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 10
 bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 10
+bindsym Print exec scrot 'screenshot-%Y%m%d-%H%m%s.png' -e 'mv $f ~/Pictures/screenshots/'
+bindsym Shift+Print exec xfce4-screenshooter -r -s ~/Pictures/screenshots
 
 # switch to previous workspace
 bindsym $mod+Tab workspace back_and_forth
