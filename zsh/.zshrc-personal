@@ -1,10 +1,26 @@
 export ZSH=/home/nomad/.oh-my-zsh
 export FZF_COMMAND='fd --type f --hidden --follow --exclude .git'
 
-ZSH_THEME="ys"
 HIST_STAMPS="mm/dd/yyyy"
 
-plugins=(git github npm docker fzf)
+# Builtin oh-my-zsh theme
+# minimal & statusline with many cool features
+# unlike other bloated and eyesore popular themes
+# ZSH_THEME="ys"
+
+# Third party zsh theme
+# Installation instructions:
+# https://spaceship-prompt.sh/getting-started/
+ZSH_THEME="spaceship"
+SPACESHIP_USER_SHOW="always"
+SPACESHIP_HOST_SHOW="always"
+SPACESHIP_HOST_PREFIX="@ "
+SPACESHIP_TIME_SHOW=true
+SPACESHIP_JOBS_SHOW=true
+SPACESHIP_EXIT_CODE_SHOW=true
+
+
+plugins=(git github npm docker fzf kubectl)
 
 if [ $(id -u) -eq 0 ]; then
 	ZSH_DISABLE_COMPFIX=true
@@ -13,7 +29,7 @@ fi
 source $ZSH/oh-my-zsh.sh
 
 if [ -n "$TMUX" ]; then
-	TERM="screen-256color"
+	TERM="tmux-256color"
 fi
 
 export EDITOR="nvim"
@@ -40,5 +56,34 @@ export LESS_TERMCAP_us=$'\e[1;4;31m'
 alias work="tmux a || tmux new"
 if [ -f $HOME/.cargo/env ]; then source $HOME/.cargo/env; fi
 xset b off
-eval `keychain --eval --agents ssh ~/.ssh/id_rsa`
-#neofetch
+eval `keychain --eval --agents ssh ~/.ssh/id_ed25519`
+source <(minikube completion zsh)
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+# Keep this hook after nvm load statements
+autoload -U add-zsh-hook
+
+# Automatically switch to a node version inside .nvmrc
+# otherwise using the system node version
+load-nvmrc() {
+  local node_version="$(nvm version)"
+  local nvmrc_path="$(nvm_find_nvmrc)"
+
+  if [ -n "$nvmrc_path" ]; then
+    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+
+    if [ "$nvmrc_node_version" = "N/A" ]; then
+      nvm install
+    elif [ "$nvmrc_node_version" != "$node_version" ]; then
+      nvm use
+    fi
+  elif [ "$node_version" != "$(nvm version default)" ]; then
+    echo "Reverting to nvm default version"
+    nvm use default
+  fi
+}
+
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc
